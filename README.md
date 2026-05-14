@@ -1,5 +1,3 @@
-# syncup
-A website for Students of PCCOE to explore and collaborate with like minded individuals
 # SyncUp 🎓
 
 SyncUp is a social networking platform designed for college students to connect, collaborate, and build communities based on their interests, skills, and academic domains.
