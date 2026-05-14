@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Page - SyncUp</title>
+
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem('syncup-theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+        })();
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --page-bg: linear-gradient(135deg, #d8eef2, #cbe6f7);
+            --panel-bg: rgba(255, 255, 255, 0.72);
+            --panel-border: rgba(255, 255, 255, 0.45);
+            --panel-shadow: 0 8px 30px rgba(15, 23, 42, 0.12);
+            --text-primary: #102235;
+            --text-secondary: #284357;
+            --text-accent: #0ea5e9;
+            --bubble-bg: rgba(255, 255, 255, 0.22);
+            --faq-bg: rgba(255, 255, 255, 0.68);
+            --faq-answer-bg: rgba(255, 255, 255, 0.8);
+            --faq-border: rgba(148, 163, 184, 0.24);
+            --faq-question: #0b5f86;
+            --faq-question-hover: #0a78aa;
+            --back-bg: rgba(255, 255, 255, 0.78);
+            --back-text: #0f172a;
+            --back-border: rgba(148, 163, 184, 0.28);
+        }
+
+        html[data-theme="dark"] {
+            --page-bg: linear-gradient(135deg, #050816, #0f172a 55%, #111827);
+            --panel-bg: rgba(15, 23, 42, 0.88);
+            --panel-border: rgba(148, 163, 184, 0.16);
+            --panel-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+            --text-primary: #e2e8f0;
+            --text-secondary: #cbd5e1;
+            --text-accent: #7dd3fc;
+            --bubble-bg: rgba(125, 211, 252, 0.14);
+            --faq-bg: rgba(15, 23, 42, 0.82);
+            --faq-answer-bg: rgba(30, 41, 59, 0.9);
+            --faq-border: rgba(148, 163, 184, 0.2);
+            --faq-question: #38bdf8;
+            --faq-question-hover: #0ea5e9;
+            --back-bg: rgba(15, 23, 42, 0.92);
+            --back-text: #e2e8f0;
+            --back-border: rgba(148, 163, 184, 0.18);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            html:not([data-theme]) {
+                --page-bg: linear-gradient(135deg, #050816, #0f172a 55%, #111827);
+                --panel-bg: rgba(15, 23, 42, 0.88);
+                --panel-border: rgba(148, 163, 184, 0.16);
+                --panel-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+                --text-primary: #e2e8f0;
+                --text-secondary: #cbd5e1;
+                --text-accent: #7dd3fc;
+                --bubble-bg: rgba(125, 211, 252, 0.14);
+                --faq-bg: rgba(15, 23, 42, 0.82);
+                --faq-answer-bg: rgba(30, 41, 59, 0.9);
+                --faq-border: rgba(148, 163, 184, 0.2);
+                --faq-question: #38bdf8;
+                --faq-question-hover: #0ea5e9;
+                --back-bg: rgba(15, 23, 42, 0.92);
+                --back-text: #e2e8f0;
+                --back-border: rgba(148, 163, 184, 0.18);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--page-bg);
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            background: var(--panel-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--panel-shadow);
+            border: 1px solid var(--panel-border);
+            position: relative;
+            z-index: 2;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 28px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: var(--back-bg);
+            color: var(--back-text);
+            border: 1px solid var(--back-border);
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .back-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(15, 23, 42, 0.14);
+        }
+
+        .bubbles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .bubbles span {
+            position: absolute;
+            bottom: -100px;
+            width: 60px;
+            height: 60px;
+            background: var(--bubble-bg);
+            border-radius: 50%;
+            backdrop-filter: blur(5px);
+            animation: rise 15s linear infinite;
+        }
+
+        .bubbles span:nth-child(1) { left: 10%; width: 40px; height: 40px; animation-duration: 12s; }
+        .bubbles span:nth-child(2) { left: 30%; width: 70px; height: 70px; animation-duration: 18s; }
+        .bubbles span:nth-child(3) { left: 50%; width: 50px; height: 50px; animation-duration: 14s; }
+        .bubbles span:nth-child(4) { left: 70%; width: 90px; height: 90px; animation-duration: 20s; }
+        .bubbles span:nth-child(5) { left: 85%; width: 60px; height: 60px; animation-duration: 16s; }
+
+        @keyframes rise {
+            0% { transform: translateY(0); opacity: 0.5; }
+            100% { transform: translateY(-110vh); opacity: 0; }
+        }
+
+        .blog-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .author {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .author span {
+            color: var(--text-accent);
+            font-weight: 500;
+        }
+
+        .blog-image {
+            width: 80%;
+            border-radius: 5px;
+            margin: 0 auto;
+            display: block;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .blog-content p { margin-bottom: 20px; font-size: 16px; color: var(--text-primary); }
+        .blog-content h2 { margin-top: 30px; font-size: 22px; color: var(--text-primary); }
+        .blog-content ul { margin-bottom: 20px; }
+
+        .feature-title { color: var(--text-primary); font-weight: 600; }
+        .icon { color: var(--text-accent); }
+
+        .ending-line {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 25px;
+            color: var(--text-primary);
+            font-family: 'Lora', serif;
+        }
+
+        .faq-section {
+            margin-top: 50px;
+            border-top: 1px solid var(--faq-border);
+            padding-top: 40px;
+        }
+
+        .faq-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+        }
+
+        .faq-item {
+            margin-bottom: 14px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--faq-border);
+            background: var(--faq-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 16px 20px;
+            text-align: left;
+            background: var(--faq-question);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .faq-question:hover {
+            background: var(--faq-question-hover);
+        }
+
+        .faq-item.active .faq-question {
+            background: var(--faq-question-hover);
+        }
+
+        .faq-chevron {
+            font-size: 18px;
+            font-weight: 400;
+            transition: transform 0.35s ease;
+            flex-shrink: 0;
+            margin-left: 12px;
+            line-height: 1;
+        }
+
+        .faq-item.active .faq-chevron {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            background: var(--faq-answer-bg);
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 20px;
+        }
+
+        .faq-answer p {
+            margin: 0;
+            font-size: 15px;
+            color: var(--text-primary);
+            line-height: 1.75;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 16px 20px;
+        }
+
+        @media (max-width: 860px) {
+            .container {
+                margin: 24px 16px;
+                padding: 24px;
+            }
+
+            .blog-image {
+                width: 100%;
+                height: 220px;
+            }
+
+            .blog-title {
+                font-size: 30px;
+            }
+
+            .faq-section h2 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bubbles">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="container">
+        <a class="back-button" href="index.html" aria-label="Back to home page">&#8592; Back to Home</a>
+
+        <h1 class="blog-title">Syncup: Connecting Minds Within Campus</h1>
+
+        <div class="author">
+            By <span>Team Synup</span> | February 2026
+        </div>
+
+        <img src="https://plus.unsplash.com/premium_photo-1677529496297-fd0174d65941?w=600&auto=format&fit=crop&q=60"
+            alt="Campus Collaboration" class="blog-image">
+
+        <div class="blog-content">
+            <p>
+                In college, we meet hundreds of people every day. We attend classes together, sit in the same labs,
+                and walk through the same corridors. Yet, many of us struggle to find people who share our mindset,
+                interests, and goals.
+            </p>
+
+            <p>
+                Some students are building amazing tech projects. Some are working on startups. Some are exploring
+                design, finance, content creation, or research. But the problem is — we don't know what others are
+                building. That's where <strong>Synup</strong> comes in.
+            </p>
+
+            <h2>The Problem We Noticed</h2>
+            <ul>
+                <li>Students cannot find like-minded friends.</li>
+                <li>They don't know who is working in their field.</li>
+                <li>They want to collaborate but don't know whom to approach.</li>
+                <li>Talent inside campus remains invisible.</li>
+            </ul>
+
+            <p>Even though we are physically present in college, we are digitally disconnected.</p>
+
+            <h2>The Solution: Synup</h2>
+            <p>
+                Synup is a campus-focused professional networking platform. It works like a college version of LinkedIn —
+                designed specifically for students within one campus.
+            </p>
+            <ul>
+                <li>Showcase their projects</li>
+                <li>Share their interests</li>
+                <li>Choose their domain (Tech or Non-Tech)</li>
+                <li>Discover what others are building</li>
+                <li>Connect and collaborate easily</li>
+            </ul>
+            <p><strong>Synup makes talent visible.</strong></p>
+
+            <h2>Key Features</h2>
+
+            <h4 class="feature-title"><span class="icon">🔹</span> Domain Selection</h4>
+            <p>
+                Students can choose Tech (Coding, AI, Web Development, Data Science) or Non-Tech
+                (Design, Marketing, Finance, Content, Management) to find people in their specific interest area.
+            </p>
+
+            <h4 class="feature-title"><span class="icon">🔹</span> Project Showcase</h4>
+            <p>
+                Students can upload and display projects, ideas, startup concepts, and research work.
+                Instead of hidden talent, we create visible innovation.
+            </p>
+
+            <h4 class="feature-title"><span class="icon">🔹</span> Collab Button</h4>
+            <p>
+                The "Collab" feature allows students to directly connect with others who share similar interests.
+                No awkward searching. No random messaging. Just meaningful collaboration.
+            </p>
+
+            <h2>Our Vision</h2>
+            <p>
+                Synup is not just a website — it is a community. We believe every campus has builders, dreamers,
+                creators, and leaders. They just need a platform to connect.
+            </p>
+            <ul>
+                <li>Encourage collaboration</li>
+                <li>Increase project visibility</li>
+                <li>Help students grow together</li>
+                <li>Build a strong campus network</li>
+            </ul>
+
+            <h2>The Future of Campus Networking</h2>
+            <ul>
+                <li>Instantly know who is building what</li>
+                <li>Find teammates easily</li>
+                <li>Collaborate across departments</li>
+                <li>Get recognition for your work</li>
+            </ul>
+
+            <p class="ending-line">
+                <strong>Synup — Where Campus Minds Connect.</strong>
+            </p>
+        </div>
+
+        <section class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    What is SyncUp?
+                    <span class="faq-chevron">&#8964;</span>
+                </button>
+                <div class="faq-answer">
+                    <p>SyncUp is a student networking platform that connects people based on interests and collaboration goals.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    Is it free to use?
+                    <span class="faq-chevron">&#8964;</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes, SyncUp is completely free for students.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    Can I collaborate on projects?
+                    <span class="faq-chevron">&#8964;</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Absolutely! The Collab feature allows students to find teammates and build projects together.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    Who can join SyncUp?
+                    <span class="faq-chevron">&#8964;</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Any student from your campus can join SyncUp. It is designed to be an inclusive platform for all departments — whether you're in Tech, Design, Business, or any other field.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    How do I find teammates for my project?
+                    <span class="faq-chevron">&#8964;</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Use the Collaborations feed to post your project idea and specify the roles you're looking for. Students interested in joining will be able to connect with you directly through the platform.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const questions = document.querySelectorAll('.faq-question');
+        questions.forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                document.querySelectorAll('.faq-item.active').forEach(openItem => {
+                    if (openItem !== item) {
+                        openItem.classList.remove('active');
+                    }
+                });
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CollegeLink – Domain Filter</title>
+<script>
+  (function() {
+    var t = localStorage.getItem('syncup-theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  })();
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #e8f4fb;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 240px;
+    background: #fff;
+    height: 100vh;
+    position: fixed;
+    top: 0; left: 0;
+    padding: 20px 0;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px 24px;
+    border-bottom: 1px solid #eef4f8;
+  }
+
+  .logo-icon {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, #29b6e8, #0e86c0);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 18px;
+  }
+
+  .logo-text h2 { font-size: 16px; color: #0d3b66; font-weight: 700; }
+  .logo-text span { font-size: 11px; color: #7ab3cc; }
+
+  /* Domains accordion in sidebar */
+  .sidebar-section { border-bottom: 1px solid #eef4f8; }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    color: #0d3b66;
+    transition: background 0.2s;
+    user-select: none;
+  }
+  .sidebar-item:hover { background: #f0f8fd; }
+
+  .sidebar-item .arrow {
+    font-size: 11px;
+    transition: transform 0.3s;
+    color: #7ab3cc;
+  }
+  .sidebar-item.open .arrow { transform: rotate(180deg); }
+
+  /* Domain sub-list in sidebar */
+  .domain-list {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.35s ease;
+  }
+  .domain-list.open { max-height: 300px; }
+
+  .domain-sub-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 20px 11px 28px;
+    font-size: 14px;
+    color: #1a6fa3;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .domain-sub-item:hover { background: #e6f5fc; }
+  .domain-sub-item .icon { font-size: 15px; }
+
+  /* ── OVERLAY MODAL SYSTEM ── */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(200,230,245,0.55);
+    backdrop-filter: blur(2px);
+    z-index: 200;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .overlay.active { display: flex; }
+
+  .modal {
+    background: #fff;
+    width: 100%;
+    max-width: 860px;
+    min-height: 100vh;
+    position: relative;
+    display: none;
+    flex-direction: column;
+  }
+  .modal.active { display: flex; }
+
+  /* Modal Header */
+  .modal-header {
+    padding: 22px 28px;
+    border-bottom: 1px solid #e0eef6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    position: sticky; top: 0; z-index: 10;
+  }
+
+  .modal-header-left { display: flex; align-items: center; gap: 14px; }
+
+  .back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #0d3b66;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+  }
+  .back-btn:hover { background: #e8f4fb; }
+
+  .modal-title h2 { font-size: 20px; font-weight: 700; color: #0d3b66; }
+  .modal-title p  { font-size: 13px; color: #1a9ad6; margin-top: 2px; }
+
+  .apply-btn {
+    background: #1ab3e8;
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    display: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .apply-btn.visible { display: flex; }
+  .apply-btn:hover { background: #0e9bd4; transform: translateY(-1px); }
+
+  /* Modal Body */
+  .modal-body {
+    background: linear-gradient(160deg, #d6eef9 0%, #c8e8f5 40%, #b8dff0 100%);
+    flex: 1;
+    padding: 30px 28px 40px;
+    overflow-y: auto;
+  }
+
+  .modal-hint {
+    text-align: center;
+    color: #1a6fa3;
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  /* Selected Tags Box */
+  .selected-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 22px;
+    display: none;
+  }
+  .selected-box.visible { display: block; }
+  .selected-box-label { font-size: 13px; color: #555; margin-bottom: 10px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .tag {
+    background: #1ab3e8;
+    color: #fff;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tag .remove {
+    cursor: pointer;
+    opacity: 0.8;
+    font-size: 15px;
+    line-height: 1;
+  }
+  .tag .remove:hover { opacity: 1; }
+
+  /* Domain Grid */
+  .domain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .domain-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0d3b66;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    user-select: none;
+  }
+  .domain-card:hover {
+    box-shadow: 0 4px 16px rgba(26,179,232,0.15);
+    border-color: #9dd8f0;
+    transform: translateY(-2px);
+  }
+  .domain-card.selected {
+    background: #1ab3e8;
+    color: #fff;
+    border-color: #1ab3e8;
+    box-shadow: 0 4px 16px rgba(26,179,232,0.3);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 30px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #0d3b66;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 999;
+    transition: transform 0.4s ease;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🎓</div>
+    <div class="logo-text">
+      <h2>CollegeLink</h2>
+      <span>Connect &amp; Create</span>
+    </div>
+  </div>
+
+  <!-- Domains accordion -->
+  <div class="sidebar-section">
+    <div class="sidebar-item" id="domainToggle" onclick="toggleDomainList()">
+      <span>Domains</span>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="domain-list" id="domainList">
+      <div class="domain-sub-item" onclick="openModal('tech')">
+        <span class="icon">&lt;&gt;</span> Tech
+      </div>
+      <div class="domain-sub-item" onclick="openModal('nontech')">
+        <span class="icon">💼</span> Non-Tech
+      </div>
+      <div class="domain-sub-item" onclick="openModal('additional')">
+        <span class="icon">+</span> Additional Domain
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-item">
+      <span>PCCOE</span>
+      <span class="arrow">▼</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════ OVERLAY ══════════════ -->
+<div class="overlay" id="overlay">
+
+  <!-- ── MODAL: Tech Domains ── -->
+  <div class="modal" id="modal-tech">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <button class="back-btn" onclick="closeModal('tech')">←</button>
+        <div class="modal-title">
+          <h2>Tech Domains</h2>
+          <p>Select a domain to explore subdomains</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <p class="modal-hint">Click on any tech domain to explore its subdomains</p>
+      <div class="domain-grid">
+        <div class="domain-card" onclick="openSubModal('Software &amp; Computing', 'tech', ['Web Development','Mobile App Development','Backend Development','Full Stack Development','Game Development','Software Engineering'])">Software &amp; Computing</div>
+        <div class="domain-card" onclick="openSubModal('Artificial Intelligence &amp; Data', 'tech', ['Machine Learning','Deep Learning','Data Science','Natural Language Processing','Computer Vision','Data Engineering'])">Artificial Intelligence &amp; Data</div>
+        <div class="domain-card" onclick="openSubModal('Cyber &amp; Systems', 'tech', ['Cybersecurity','Network Engineering','Cloud Computing','DevOps','Embedded Systems','OS & Systems'])">Cyber &amp; Systems</div>
+        <div class="domain-card" onclick="openSubModal('Hardware &amp; Core Engineering', 'tech', ['VLSI Design','Robotics','IoT','Electronics','Mechanical Engineering','Electrical Engineering'])">Hardware &amp; Core Engineering</div>
+        <div class="domain-card" onclick="openSubModal('Engineering Specializations', 'tech', ['Biomedical Engineering','Chemical Engineering','Civil Engineering','Aerospace Engineering','Environmental Engineering','Materials Science'])">Engineering Specializations</div>
+        <div class="domain-card" onclick="openSubModal('Creative Tech', 'tech', ['UI/UX Design','AR/VR Development','Digital Art','3D Modeling','Animation','Creative Coding'])">Creative Tech</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODAL: Non-Tech Domains ── -->
+  <div class="modal" id="modal-nontech">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <button class="back-btn" onclick="closeModal('nontech')">←</button>
+        <div class="modal-title">
+          <h2>Non-Tech Domains</h2>
+          <p>Select a domain to explore subdomains</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <p class="modal-hint">Click on any non-tech domain to explore its subdomains</p>
+      <div class="domain-grid">
+        <div class="domain-card" onclick="openSubModal('Business &amp; Management', 'nontech', ['Entrepreneurship','Product Management','Operations','Human Resources','Consulting','Strategy'])">Business &amp; Management</div>
+        <div class="domain-card" onclick="openSubModal('Marketing &amp; Media', 'nontech', ['Digital Marketing','Content Creation','Social Media','Brand Management','Public Relations','Journalism'])">Marketing &amp; Media</div>
+        <div class="domain-card" onclick="openSubModal('Finance &amp; Economics', 'nontech', ['Investment Banking','Personal Finance','Accounting','Economics','FinTech','Equity Research'])">Finance &amp; Economics</div>
+        <div class="domain-card" onclick="openSubModal('Creative &amp; Communication', 'nontech', ['Graphic Design','Photography','Video Editing','Public Speaking','Writing','Performing Arts'])">Creative &amp; Communication</div>
+        <div class="domain-card" onclick="openSubModal('Design &amp; Art', 'nontech', ['Interior Design','Fashion Design','Industrial Design','Fine Arts','Typography','Illustration'])">Design &amp; Art</div>
+        <div class="domain-card" onclick="openSubModal('Research &amp; Academics', 'nontech', ['Scientific Research','Academic Writing','Literature Review','Lab Research','Thesis Work','Teaching & Tutoring'])">Research &amp; Academics</div>
+        <div class="domain-card" onclick="openSubModal('Community &amp; Leadership', 'nontech', ['NGO & Social Work','Event Management','Student Council','Volunteering','Club Leadership','Policy Advocacy'])">Community &amp; Leadership</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODAL: Additional Domains ── -->
+  <div class="modal" id="modal-additional">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <button class="back-btn" onclick="closeModal('additional')">←</button>
+        <div class="modal-title">
+          <h2>Additional Domains</h2>
+          <p>Special Interest Areas</p>
+        </div>
+      </div>
+      <button class="apply-btn" id="apply-additional" onclick="applyFilters('additional')">✓ Apply Filters</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-hint">Select the domains you're interested in (multiple selections allowed)</p>
+      <div class="selected-box" id="selected-box-additional">
+        <div class="selected-box-label" id="selected-label-additional">Selected (0):</div>
+        <div class="tags" id="tags-additional"></div>
+      </div>
+      <div class="domain-grid" id="grid-additional">
+        <div class="domain-card" onclick="toggleAdditional(this, 'Open Source Development')">Open Source Development</div>
+        <div class="domain-card" onclick="toggleAdditional(this, 'Competitive Programming')">Competitive Programming</div>
+        <div class="domain-card" onclick="toggleAdditional(this, 'Hackathons')">Hackathons</div>
+        <div class="domain-card" onclick="toggleAdditional(this, 'Sustainability / Climate Tech')">Sustainability / Climate Tech</div>
+        <div class="domain-card" onclick="toggleAdditional(this, 'Social Impact')">Social Impact</div>
+        <div class="domain-card" onclick="toggleAdditional(this, 'EdTech')">EdTech</div>
+        <div class="domain-card" onclick="toggleAdditional(this, 'HealthTech')">HealthTech</div>
+        <div class="domain-card" onclick="toggleAdditional(this, 'Legal / Policy')">Legal / Policy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SUB-MODAL: Subdomains ── -->
+  <div class="modal" id="modal-sub">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <button class="back-btn" id="sub-back-btn">←</button>
+        <div class="modal-title">
+          <h2 id="sub-title">Subdomains</h2>
+          <p id="sub-subtitle">Tech Domain</p>
+        </div>
+      </div>
+      <button class="apply-btn visible" id="apply-sub" onclick="applySubFilters()">✓ Apply Filters</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-hint">Select the subdomains you're interested in (multiple selections allowed)</p>
+      <div class="selected-box" id="selected-box-sub">
+        <div class="selected-box-label" id="selected-label-sub">Selected (0):</div>
+        <div class="tags" id="tags-sub"></div>
+      </div>
+      <div class="domain-grid" id="grid-sub"></div>
+    </div>
+  </div>
+
+</div><!-- /overlay -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+
+<script>
+  // ── State ──
+  const selectedSubdomains = new Set();
+  const selectedAdditional = new Set();
+  let currentParentModal = 'tech';
+
+  // ── Sidebar accordion ──
+  function toggleDomainList() {
+    const list = document.getElementById('domainList');
+    const btn  = document.getElementById('domainToggle');
+    list.classList.toggle('open');
+    btn.classList.toggle('open');
+  }
+
+  // ── Open main category modal ──
+  function openModal(type) {
+    document.getElementById('overlay').classList.add('active');
+    ['tech','nontech','additional','sub'].forEach(t => {
+      document.getElementById('modal-' + t).classList.remove('active');
+    });
+    document.getElementById('modal-' + type).classList.add('active');
+  }
+
+  function closeModal(type) {
+    document.getElementById('modal-' + type).classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+    selectedSubdomains.clear();
+  }
+
+  // ── Open subdomain modal ──
+  function openSubModal(domainName, parentType, subdomains) {
+    currentParentModal = parentType;
+
+    // Update header
+    document.getElementById('sub-title').textContent = domainName.replace(/&amp;/g,'&');
+    document.getElementById('sub-subtitle').textContent =
+      parentType === 'tech' ? 'Tech Domain' : 'Non-Tech Domain';
+
+    // Back button goes to parent
+    document.getElementById('sub-back-btn').onclick = () => {
+      document.getElementById('modal-sub').classList.remove('active');
+      document.getElementById('modal-' + parentType).classList.add('active');
+      selectedSubdomains.clear();
+      refreshSubUI();
+    };
+
+    // Build grid
+    const grid = document.getElementById('grid-sub');
+    grid.innerHTML = '';
+    subdomains.forEach(sub => {
+      const card = document.createElement('div');
+      card.className = 'domain-card' + (selectedSubdomains.has(sub) ? ' selected' : '');
+      card.textContent = sub;
+      card.onclick = () => toggleSub(card, sub);
+      grid.appendChild(card);
+    });
+
+    refreshSubUI();
+
+    // Switch modals
+    document.getElementById('modal-' + parentType).classList.remove('active');
+    document.getElementById('modal-sub').classList.add('active');
+  }
+
+  // ── Toggle subdomain card ──
+  function toggleSub(card, name) {
+    if (selectedSubdomains.has(name)) {
+      selectedSubdomains.delete(name);
+      card.classList.remove('selected');
+    } else {
+      selectedSubdomains.add(name);
+      card.classList.add('selected');
+    }
+    refreshSubUI();
+  }
+
+  function refreshSubUI() {
+    const box   = document.getElementById('selected-box-sub');
+    const label = document.getElementById('selected-label-sub');
+    const tags  = document.getElementById('tags-sub');
+
+    if (selectedSubdomains.size > 0) {
+      box.classList.add('visible');
+      label.textContent = `Selected (${selectedSubdomains.size}):`;
+      tags.innerHTML = '';
+      selectedSubdomains.forEach(name => {
+        const tag = document.createElement('div');
+        tag.className = 'tag';
+        tag.innerHTML = `${name} <span class="remove" onclick="removeSub('${name}')">×</span>`;
+        tags.appendChild(tag);
+      });
+    } else {
+      box.classList.remove('visible');
+    }
+  }
+
+  function removeSub(name) {
+    selectedSubdomains.delete(name);
+    // also deselect card
+    document.querySelectorAll('#grid-sub .domain-card').forEach(card => {
+      if (card.textContent.trim() === name) card.classList.remove('selected');
+    });
+    refreshSubUI();
+  }
+
+  function applySubFilters() {
+    if (selectedSubdomains.size === 0) {
+      showToast('Please select at least one subdomain.');
+      return;
+    }
+    const list = [...selectedSubdomains].join(', ');
+    showToast(`✓ Filter applied: ${list}`);
+    setTimeout(() => {
+      document.getElementById('modal-sub').classList.remove('active');
+      document.getElementById('overlay').classList.remove('active');
+      selectedSubdomains.clear();
+    }, 1800);
+  }
+
+  // ── Additional domains ──
+  function toggleAdditional(card, name) {
+    if (selectedAdditional.has(name)) {
+      selectedAdditional.delete(name);
+      card.classList.remove('selected');
+    } else {
+      selectedAdditional.add(name);
+      card.classList.add('selected');
+    }
+    refreshAdditionalUI();
+  }
+
+  function refreshAdditionalUI() {
+    const box   = document.getElementById('selected-box-additional');
+    const label = document.getElementById('selected-label-additional');
+    const tags  = document.getElementById('tags-additional');
+    const applyBtn = document.getElementById('apply-additional');
+
+    if (selectedAdditional.size > 0) {
+      box.classList.add('visible');
+      applyBtn.classList.add('visible');
+      label.textContent = `Selected (${selectedAdditional.size}):`;
+      tags.innerHTML = '';
+      selectedAdditional.forEach(name => {
+        const tag = document.createElement('div');
+        tag.className = 'tag';
+        tag.innerHTML = `${name} <span class="remove" onclick="removeAdditional('${name}')">×</span>`;
+        tags.appendChild(tag);
+      });
+    } else {
+      box.classList.remove('visible');
+      applyBtn.classList.remove('visible');
+    }
+  }
+
+  function removeAdditional(name) {
+    selectedAdditional.delete(name);
+    document.querySelectorAll('#grid-additional .domain-card').forEach(card => {
+      if (card.textContent.trim() === name) card.classList.remove('selected');
+    });
+    refreshAdditionalUI();
+  }
+
+  function applyFilters(type) {
+    const set = type === 'additional' ? selectedAdditional : selectedSubdomains;
+    if (set.size === 0) { showToast('Please select at least one domain.'); return; }
+    const list = [...set].join(', ');
+    showToast(`✓ Filter applied: ${list}`);
+    setTimeout(() => {
+      document.getElementById('modal-' + type).classList.remove('active');
+      document.getElementById('overlay').classList.remove('active');
+      set.clear();
+      if (type === 'additional') refreshAdditionalUI();
+    }, 1800);
+  }
+
+  // ── Toast ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+</script>
+</body>
+</html>

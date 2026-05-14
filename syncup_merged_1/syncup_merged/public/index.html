@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home — SyncUp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<script>
+  // Apply saved theme immediately to prevent flash
+  (function() {
+    var t = localStorage.getItem('syncup-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<style>
+/* ===== CSS VARIABLES ===== */
+:root {
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --sky-50:  #f0f9ff;
+  --sky-100: #e0f2fe;
+  --sky-200: #bae6fd;
+  --sky-300: #7dd3fc;
+  --sky-400: #38bdf8;
+  --sky-500: #0ea5e9;
+  --sky-600: #0284c7;
+  --sky-700: #0369a1;
+  --sky-900: #0c4a6e;
+  --cyan-50:  #ecfeff;
+  --cyan-100: #cffafe;
+  --cyan-200: #a5f3fc;
+  --cyan-300: #67e8f9;
+  --cyan-500: #06b6d4;
+  --cyan-600: #0891b2;
+  --cyan-700: #0e7490;
+  --cyan-900: #164e63;
+  --slate-50:  #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+
+  --bg-page: linear-gradient(135deg, #e0f2fe 0%, #ecfeff 50%, #dbeafe 100%);
+  --bg-sidebar: linear-gradient(180deg, rgba(240,249,255,0.92) 0%, rgba(236,254,255,0.92) 100%);
+  --bg-sidebar-border: rgba(186,230,253,0.5);
+  --bg-card: rgba(255,255,255,0.82);
+  --bg-card-border: rgba(186,230,253,0.55);
+  --bg-topbar: rgba(255,255,255,0.5);
+  --bg-input: rgba(255,255,255,0.7);
+  --bg-navitem: rgba(255,255,255,0.6);
+  --bg-navitem-hover: rgba(255,255,255,0.9);
+  --bg-profile: rgba(255,255,255,0.7);
+  --bg-widget: rgba(255,255,255,0.82);
+  --bg-widget-border: rgba(186,230,253,0.5);
+  --bg-connection: rgba(255,255,255,0.6);
+  --bg-trending: rgba(255,255,255,0.6);
+  --bg-collab-box: rgba(236,254,255,0.5);
+  --bg-collab-border: rgba(165,243,252,0.5);
+  --bg-tag-skill: rgba(255,255,255,0.7);
+  --bg-tag-hash: rgba(224,242,254,1);
+  --text-primary: #0c4a6e;
+  --text-secondary: #0284c7;
+  --text-muted: #38bdf8;
+  --text-faint: #7dd3fc;
+  --text-body: #0369a1;
+  --text-tag-hash: #0369a1;
+  --text-tag-skill: #0e7490;
+  --text-collab: #164e63;
+  --ring-avatar: rgba(186,230,253,1);
+  --ring-avatar-hover: var(--sky-400);
+  --shadow-card: 0 4px 24px rgba(14,165,233,0.08);
+  --shadow-card-hover: 0 8px 40px rgba(14,165,233,0.16);
+  --shadow-btn: 0 4px 14px rgba(14,165,233,0.35);
+  --shadow-collab-btn: 0 4px 14px rgba(6,182,212,0.35);
+  --fab-post-bg: var(--sky-500);
+  --fab-post-hover: var(--sky-600);
+  --fab-collab-bg: var(--cyan-500);
+  --fab-collab-hover: var(--cyan-600);
+  --btn-connect-bg: var(--sky-500);
+  --btn-connect-hover: var(--sky-600);
+  --btn-join-bg: var(--cyan-500);
+  --btn-join-hover: var(--cyan-600);
+  --tab-active-bg: var(--sky-500);
+  --tab-active-text: #fff;
+  --tab-inactive-bg: rgba(255,255,255,0.6);
+  --tab-inactive-text: var(--sky-700);
+  --tab-inactive-hover: rgba(255,255,255,0.9);
+  --action-btn-color: var(--sky-600);
+  --action-btn-hover: var(--sky-700);
+  --notif-dot: #ef4444;
+  --icon-btn-bg: rgba(255,255,255,0.7);
+  --icon-btn-hover: rgba(255,255,255,0.95);
+  --icon-btn-color: var(--sky-700);
+  --chat-panel-bg: rgba(240,249,255,0.97);
+  --chat-item-hover: rgba(255,255,255,0.8);
+  --modal-bg: rgba(255,255,255,0.97);
+  --modal-overlay: rgba(15,23,42,0.4);
+}
+
+[data-theme="dark"] {
+  --bg-page: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  --bg-sidebar: linear-gradient(180deg, rgba(15,23,42,0.97) 0%, rgba(30,41,59,0.97) 100%);
+  --bg-sidebar-border: rgba(51,65,85,0.5);
+  --bg-card: rgba(30,41,59,0.82);
+  --bg-card-border: rgba(51,65,85,0.5);
+  --bg-topbar: rgba(15,23,42,0.6);
+  --bg-input: rgba(30,41,59,0.7);
+  --bg-navitem: rgba(30,41,59,0.6);
+  --bg-navitem-hover: rgba(51,65,85,0.8);
+  --bg-profile: rgba(30,41,59,0.7);
+  --bg-widget: rgba(30,41,59,0.82);
+  --bg-widget-border: rgba(51,65,85,0.5);
+  --bg-connection: rgba(51,65,85,0.5);
+  --bg-trending: rgba(51,65,85,0.5);
+  --bg-collab-box: rgba(8,36,56,0.4);
+  --bg-collab-border: rgba(12,74,110,0.5);
+  --bg-tag-skill: rgba(51,65,85,0.6);
+  --bg-tag-hash: rgba(12,74,110,0.5);
+  --text-primary: #e0f2fe;
+  --text-secondary: #38bdf8;
+  --text-muted: #7dd3fc;
+  --text-faint: #475569;
+  --text-body: #bae6fd;
+  --text-tag-hash: #7dd3fc;
+  --text-tag-skill: #67e8f9;
+  --text-collab: #a5f3fc;
+  --ring-avatar: rgba(56,189,248,0.5);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-card-hover: 0 8px 40px rgba(0,0,0,0.5);
+  --shadow-btn: 0 4px 14px rgba(2,132,199,0.4);
+  --shadow-collab-btn: 0 4px 14px rgba(8,145,178,0.4);
+  --fab-post-bg: var(--sky-600);
+  --fab-post-hover: var(--sky-700);
+  --fab-collab-bg: var(--cyan-600);
+  --fab-collab-hover: var(--cyan-700);
+  --btn-connect-bg: var(--sky-600);
+  --btn-connect-hover: var(--sky-700);
+  --btn-join-bg: var(--cyan-600);
+  --btn-join-hover: var(--cyan-700);
+  --tab-active-bg: var(--sky-600);
+  --tab-inactive-bg: rgba(30,41,59,0.6);
+  --tab-inactive-text: #7dd3fc;
+  --tab-inactive-hover: rgba(51,65,85,0.8);
+  --action-btn-color: #38bdf8;
+  --action-btn-hover: #7dd3fc;
+  --icon-btn-bg: rgba(30,41,59,0.7);
+  --icon-btn-hover: rgba(51,65,85,0.9);
+  --icon-btn-color: #7dd3fc;
+  --chat-panel-bg: rgba(15,23,42,0.98);
+  --chat-item-hover: rgba(30,41,59,0.8);
+  --modal-bg: rgba(15,23,42,0.98);
+  --modal-overlay: rgba(0,0,0,0.7);
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--bg-page); min-height: 100vh; color: var(--text-primary); overflow-x: hidden; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+img { display: block; }
+.hidden { display: none !important; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--sky-200); border-radius: 99px; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background: var(--slate-700); }
+
+/* ===== LEFT SIDEBAR ===== */
+.sidebar-left {
+  position: fixed; top: 0; left: 0; width: 20%; height: 100vh;
+  background: var(--bg-sidebar); border-right: 1px solid var(--bg-sidebar-border);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  display: flex; flex-direction: column; padding: 20px 16px; z-index: 100; overflow: hidden;
+}
+
+.sidebar-logo { display: flex; align-items: center; gap: 12px; padding: 0 8px; margin-bottom: 24px; flex-shrink: 0; }
+
+.logo-icon {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, var(--sky-500), var(--cyan-500));
+  border-radius: 14px; display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0; box-shadow: 0 4px 14px rgba(14,165,233,0.35);
+}
+
+.logo-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; color: var(--text-primary); line-height: 1.2; }
+.logo-sub { font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; }
+
+.sidebar-nav { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 11px 16px;
+  border-radius: 12px; background: var(--bg-navitem); backdrop-filter: blur(6px);
+  color: var(--text-body); font-size: 0.83rem; font-weight: 600;
+  transition: background 0.18s, box-shadow 0.18s; width: 100%; text-align: left;
+}
+.nav-item:hover { background: var(--bg-navitem-hover); box-shadow: 0 2px 12px rgba(14,165,233,0.12); color: var(--text-primary); }
+.nav-item.active { background: var(--tab-active-bg); color: #fff; box-shadow: var(--shadow-btn); }
+
+.nav-group { display: flex; flex-direction: column; gap: 2px; }
+
+.nav-collapse-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 11px 16px; border-radius: 12px; background: var(--bg-navitem);
+  backdrop-filter: blur(8px); color: var(--text-body); font-size: 0.83rem;
+  font-weight: 600; transition: background 0.2s;
+}
+.nav-collapse-btn:hover { background: var(--bg-navitem-hover); color: var(--text-primary); }
+.nav-collapse-btn .nav-icon { display: flex; align-items: center; gap: 10px; }
+
+.chevron { transition: transform 0.25s ease; flex-shrink: 0; color: var(--text-secondary); }
+.chevron.open { transform: rotate(180deg); }
+
+.collapse-body {
+  display: none; flex-direction: column; gap: 2px;
+  padding-left: 8px; animation: slideDown 0.2s ease;
+}
+.collapse-body.open { display: flex; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.nav-item.sub { font-size: 0.78rem; padding: 9px 14px; border-radius: 10px; }
+
+.domain-nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 9px 14px;
+  border-radius: 10px; background: transparent; color: var(--text-body);
+  font-size: 0.78rem; font-weight: 600; transition: background 0.18s;
+  width: 100%; text-align: left; cursor: pointer;
+}
+.domain-nav-item:hover { background: var(--bg-navitem-hover); color: var(--text-primary); }
+
+.sidebar-profile { flex-shrink: 0; padding-top: 16px; border-top: 1px solid var(--bg-sidebar-border); margin-top: auto; }
+
+.profile-link {
+  display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px;
+  background: var(--bg-profile); backdrop-filter: blur(8px); transition: background 0.2s;
+}
+.profile-link:hover { background: var(--bg-navitem-hover); }
+
+.profile-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--ring-avatar); flex-shrink: 0; }
+.profile-name { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.profile-sub { font-size: 0.72rem; color: var(--text-secondary); }
+
+/* ===== TOP BAR ===== */
+.topbar {
+  position: fixed; top: 0; left: 20%; right: 28%; z-index: 200;
+  padding: 16px 24px; display: flex; justify-content: center; align-items: center;
+}
+
+.search-wrap {
+  width: 100%; max-width: 600px; background: var(--bg-topbar);
+  border: 1px solid var(--bg-card-border); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px); border-radius: 999px;
+  display: flex; align-items: center; padding: 0 20px; gap: 12px;
+  transition: max-width 0.4s ease, box-shadow 0.3s; box-shadow: 0 2px 16px rgba(14,165,233,0.08);
+}
+.search-wrap.expanded { max-width: 100%; box-shadow: 0 4px 24px rgba(14,165,233,0.18); }
+.search-icon { color: var(--sky-400); flex-shrink: 0; }
+.search-input { flex: 1; padding: 14px 0; background: transparent; border: none; outline: none; font-family: var(--font-body); font-size: 0.875rem; color: var(--text-primary); }
+.search-input::placeholder { color: var(--text-muted); }
+
+/* ===== TOP RIGHT CONTROLS ===== */
+.top-controls { position: fixed; top: 18px; right: 20px; z-index: 300; display: flex; align-items: center; gap: 10px; }
+
+.icon-btn {
+  width: 42px; height: 42px; border-radius: 50%; background: var(--icon-btn-bg);
+  backdrop-filter: blur(12px); border: 1px solid var(--bg-card-border);
+  display: flex; align-items: center; justify-content: center; color: var(--icon-btn-color);
+  position: relative; transition: background 0.2s, box-shadow 0.2s;
+}
+.icon-btn:hover { background: var(--icon-btn-hover); box-shadow: 0 2px 14px rgba(14,165,233,0.2); }
+
+.notif-dot { position: absolute; top: 9px; right: 9px; width: 8px; height: 8px; background: var(--notif-dot); border-radius: 50%; border: 2px solid var(--icon-btn-bg); }
+
+/* ===== MAIN CONTENT ===== */
+.main-content { margin-left: 20%; margin-right: 28%; padding-top: 80px; padding-bottom: 100px; display: flex; flex-direction: column; }
+
+/* ===== FEED ===== */
+.feed { flex: 1; padding: 0 24px 24px; overflow-y: auto; }
+
+.feed-tabs { display: flex; gap: 10px; margin-bottom: 24px; }
+
+.tab-btn {
+  padding: 10px 22px; border-radius: 14px; font-size: 0.875rem; font-weight: 600;
+  font-family: var(--font-display); background: var(--tab-inactive-bg); color: var(--tab-inactive-text);
+  backdrop-filter: blur(8px); border: 1px solid transparent;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+}
+.tab-btn:hover { background: var(--tab-inactive-hover); }
+.tab-btn.active { background: var(--tab-active-bg); color: var(--tab-active-text); box-shadow: var(--shadow-btn); }
+
+.posts-list { display: flex; flex-direction: column; gap: 20px; }
+
+/* ===== POST CARD ===== */
+.post-card {
+  background: var(--bg-card); border: 1px solid var(--bg-card-border);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-radius: 22px; overflow: hidden; box-shadow: var(--shadow-card);
+  transition: box-shadow 0.25s, transform 0.25s; animation: fadeUp 0.35s ease both;
+}
+.post-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+.post-header { display: flex; align-items: flex-start; gap: 14px; padding: 22px 22px 14px; }
+
+.post-avatar-sm {
+  width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+  border: 2px solid var(--ring-avatar); transition: border-color 0.2s; cursor: pointer;
+}
+.post-avatar-sm:hover { border-color: var(--ring-avatar-hover); }
+
+.post-meta { flex: 1; min-width: 0; }
+.post-meta-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.post-author { font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; color: var(--text-primary); cursor: pointer; transition: color 0.18s; }
+.post-author:hover { color: var(--text-secondary); }
+.badge-collab { font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(6,182,212,0.15); color: var(--cyan-600); }
+[data-theme="dark"] .badge-collab { background: rgba(6,182,212,0.2); color: var(--cyan-300); }
+.post-role { font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; font-weight: 500; }
+.post-info { font-size: 0.72rem; color: var(--text-muted); margin-top: 1px; }
+.post-body { padding: 0 22px 16px; }
+.post-content { font-size: 0.9rem; line-height: 1.65; color: var(--text-body); margin-top: 4px; }
+
+.collab-box { margin-top: 14px; padding: 16px; border-radius: 16px; background: var(--bg-collab-box); border: 1px solid var(--bg-collab-border); backdrop-filter: blur(6px); }
+.collab-looking { font-size: 0.83rem; color: var(--text-collab); margin-bottom: 6px; }
+.collab-positions { font-size: 0.83rem; color: var(--text-collab); margin-bottom: 10px; }
+.skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag-skill { display: inline-block; padding: 4px 12px; font-size: 0.72rem; font-weight: 600; border-radius: 999px; background: var(--bg-tag-skill); color: var(--text-tag-skill); border: 1px solid var(--bg-collab-border); }
+.post-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.tag-hash { display: inline-block; padding: 4px 12px; font-size: 0.72rem; font-weight: 600; border-radius: 999px; background: var(--bg-tag-hash); color: var(--text-tag-hash); transition: background 0.18s; cursor: pointer; }
+.tag-hash:hover { filter: brightness(0.92); }
+
+/* Post actions */
+.post-actions { display: flex; align-items: center; gap: 20px; padding: 14px 22px; border-top: 1px solid var(--bg-card-border); }
+.action-btn { display: flex; align-items: center; gap: 6px; font-size: 0.83rem; font-weight: 600; color: var(--action-btn-color); transition: color 0.18s, transform 0.15s; padding: 4px 0; }
+.action-btn:hover { color: var(--action-btn-hover); transform: scale(1.05); }
+.action-btn.liked { color: #ef4444; }
+.like-count { font-variant-numeric: tabular-nums; }
+.btn-join-team { margin-left: auto; padding: 8px 22px; background: var(--btn-join-bg); color: #fff; border-radius: 12px; font-size: 0.83rem; font-weight: 700; font-family: var(--font-display); box-shadow: var(--shadow-collab-btn); transition: background 0.2s, transform 0.15s; }
+.btn-join-team:hover { background: var(--btn-join-hover); transform: translateY(-1px); }
+
+/* ===== RIGHT SIDEBAR ===== */
+.sidebar-right {
+  position: fixed; right: 0; bottom: 0; width: 28%; max-height: calc(100vh - 80px);
+  padding: 24px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;
+}
+
+.widget { background: var(--bg-widget); border: 1px solid var(--bg-widget-border); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 22px; padding: 22px; box-shadow: var(--shadow-card); }
+.widget-title { font-family: var(--font-display); font-size: 0.95rem; font-weight: 800; color: var(--text-primary); margin-bottom: 16px; }
+
+.connections-list { display: flex; flex-direction: column; gap: 10px; }
+.connection-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; background: var(--bg-connection); backdrop-filter: blur(6px); transition: background 0.2s, box-shadow 0.2s; cursor: pointer; }
+.connection-item:hover { background: var(--bg-navitem-hover); box-shadow: 0 2px 12px rgba(14,165,233,0.1); }
+.conn-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--ring-avatar); }
+.connection-item:hover .conn-avatar { border-color: var(--ring-avatar-hover); }
+.conn-info { flex: 1; min-width: 0; }
+.conn-name { font-size: 0.83rem; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-display); }
+.conn-role { font-size: 0.72rem; color: var(--text-secondary); }
+.btn-connect { flex-shrink: 0; padding: 6px 14px; background: var(--btn-connect-bg); color: #fff; border-radius: 10px; font-size: 0.75rem; font-weight: 700; transition: background 0.2s; font-family: var(--font-display); }
+.btn-connect:hover { background: var(--btn-connect-hover); }
+
+.trending-list { display: flex; flex-direction: column; gap: 8px; }
+.trending-item { padding: 10px 14px; border-radius: 14px; background: var(--bg-trending); cursor: pointer; transition: background 0.2s; }
+.trending-item:hover { background: var(--bg-navitem-hover); }
+.trend-tag { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); }
+.trend-count { font-size: 0.72rem; color: var(--text-secondary); margin-top: 2px; }
+
+/* ===== FAB BUTTONS ===== */
+.fab-group { position: fixed; bottom: 24px; right: 24px; z-index: 500; display: flex; gap: 10px; }
+.fab-btn { display: flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 14px; color: #fff; font-size: 0.875rem; font-weight: 700; font-family: var(--font-display); backdrop-filter: blur(8px); transition: background 0.2s, box-shadow 0.2s, transform 0.15s; }
+.fab-btn:hover { transform: translateY(-2px); }
+.fab-post { background: var(--fab-post-bg); box-shadow: var(--shadow-btn); }
+.fab-post:hover { background: var(--fab-post-hover); }
+.fab-collab { background: var(--fab-collab-bg); box-shadow: var(--shadow-collab-btn); }
+.fab-collab:hover { background: var(--fab-collab-hover); }
+
+/* ===== CHAT PANEL ===== */
+.chat-panel { position: fixed; right: -340px; top: 0; bottom: 0; width: 320px; background: var(--chat-panel-bg); backdrop-filter: blur(20px); border-left: 1px solid var(--bg-card-border); z-index: 600; display: flex; flex-direction: column; transition: right 0.3s cubic-bezier(.4,0,.2,1); box-shadow: -4px 0 32px rgba(14,165,233,0.1); }
+.chat-panel.open { right: 0; }
+.panel-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 16px; border-bottom: 1px solid var(--bg-card-border); }
+.panel-header h3 { font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--text-primary); }
+.panel-header button { color: var(--text-muted); font-size: 1.1rem; transition: color 0.18s; }
+.panel-header button:hover { color: var(--text-primary); }
+.panel-body { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+.chat-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; cursor: pointer; transition: background 0.18s; }
+.chat-item:hover { background: var(--chat-item-hover); }
+.chat-item img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--ring-avatar); flex-shrink: 0; }
+.chat-name { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); }
+.chat-preview { font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
+.chat-time { font-size: 0.7rem; color: var(--text-muted); flex-shrink: 0; margin-left: auto; }
+
+/* ===== MODALS ===== */
+.modal-overlay { position: fixed; inset: 0; background: var(--modal-overlay); z-index: 700; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-box { background: var(--modal-bg); border: 1px solid var(--bg-card-border); border-radius: 24px; padding: 28px; width: 90%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); animation: scaleIn 0.22s ease; }
+.modal-box.wide { max-width: 540px; }
+@keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+.modal-header h3 { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; color: var(--text-primary); }
+.modal-header button { color: var(--text-muted); font-size: 1.1rem; transition: color 0.18s; }
+.modal-header button:hover { color: var(--text-primary); }
+.modal-body { display: flex; flex-direction: column; gap: 16px; }
+.create-post-row { display: flex; gap: 12px; align-items: flex-start; }
+.post-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.post-input-wrap { position: relative; flex: 1; }
+.post-textarea { flex: 1; min-height: 120px; padding: 14px; border-radius: 16px; background: var(--bg-input); border: 1px solid var(--bg-card-border); font-family: var(--font-body); font-size: 0.9rem; color: var(--text-primary); resize: vertical; outline: none; transition: border-color 0.2s, box-shadow 0.2s; width: 100%; }
+.post-textarea:focus { border-color: var(--sky-400); box-shadow: 0 0 0 3px rgba(14,165,233,0.12); }
+.post-textarea::placeholder { color: var(--text-muted); }
+.word-counter { position: absolute; right: 10px; bottom: 8px; font-size: 0.72rem; font-weight: 600; color: var(--text-secondary); background: rgba(255,255,255,0.7); border: 1px solid var(--bg-card-border); border-radius: 999px; padding: 2px 8px; pointer-events: none; }
+[data-theme="dark"] .word-counter { background: rgba(15,23,42,0.75); }
+.modal-actions { display: flex; justify-content: flex-end; }
+.btn-primary { padding: 12px 28px; background: var(--fab-post-bg); color: #fff; border-radius: 14px; font-size: 0.875rem; font-weight: 700; font-family: var(--font-display); box-shadow: var(--shadow-btn); transition: background 0.2s, transform 0.15s; }
+.btn-primary:hover { background: var(--fab-post-hover); transform: translateY(-1px); }
+
+/* ===== DOMAIN OVERLAY ===== */
+.domain-overlay { display: none; position: fixed; inset: 0; background: var(--modal-overlay); backdrop-filter: blur(4px); z-index: 800; align-items: flex-start; justify-content: center; }
+.domain-overlay.active { display: flex; }
+.domain-modal { background: var(--modal-bg); border: 1px solid var(--bg-card-border); width: 100%; max-width: 700px; min-height: 100vh; display: none; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.domain-modal.active { display: flex; }
+.domain-modal-header { padding: 20px 24px; border-bottom: 1px solid var(--bg-card-border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; background: var(--modal-bg); backdrop-filter: blur(12px); }
+.domain-modal-left { display: flex; align-items: center; gap: 14px; }
+.domain-back-btn { width: 36px; height: 36px; border-radius: 12px; background: var(--bg-navitem); border: 1px solid var(--bg-card-border); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); cursor: pointer; transition: background 0.2s; font-size: 1rem; }
+.domain-back-btn:hover { background: var(--bg-navitem-hover); color: var(--text-primary); }
+.domain-modal-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text-primary); }
+.domain-modal-sub { font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px; }
+.domain-apply-btn { display: none; align-items: center; gap: 6px; padding: 9px 20px; background: var(--fab-post-bg); color: #fff; border-radius: 12px; font-size: 0.83rem; font-weight: 700; font-family: var(--font-display); box-shadow: var(--shadow-btn); transition: background 0.2s, transform 0.15s; cursor: pointer; border: none; }
+.domain-apply-btn.visible { display: flex; }
+.domain-apply-btn:hover { background: var(--fab-post-hover); transform: translateY(-1px); }
+.domain-modal-body { flex: 1; padding: 28px 24px 40px; overflow-y: auto; background: linear-gradient(160deg, var(--bg-page)); }
+.domain-hint { text-align: center; font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 24px; font-weight: 500; }
+.selected-tags-box { background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 14px; padding: 14px 16px; margin-bottom: 20px; display: none; }
+.selected-tags-box.visible { display: block; }
+.selected-tags-label { font-size: 0.78rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 10px; }
+.selected-tags-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.domain-tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; background: var(--fab-post-bg); color: #fff; border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
+.domain-tag .remove { cursor: pointer; opacity: 0.8; font-size: 14px; line-height: 1; }
+.domain-tag .remove:hover { opacity: 1; }
+.domain-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.domain-card { padding: 22px 18px; border-radius: 18px; background: var(--bg-card); border: 2px solid var(--bg-card-border); backdrop-filter: blur(8px); text-align: center; font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; color: var(--text-primary); cursor: pointer; transition: transform 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.2s; box-shadow: var(--shadow-card); }
+.domain-card:hover { border-color: var(--sky-400); transform: translateY(-3px); box-shadow: 0 6px 24px rgba(14,165,233,0.15); }
+.domain-card.selected { background: var(--tab-active-bg); color: #fff; border-color: var(--sky-400); box-shadow: var(--shadow-btn); transform: translateY(-2px); }
+
+/* Domain toast */
+.domain-toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--slate-900); color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 0.85rem; font-weight: 500; z-index: 999; transition: transform 0.4s ease; pointer-events: none; }
+[data-theme="dark"] .domain-toast { background: var(--sky-700); }
+.domain-toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ===== NOTIFICATION PANEL ===== */
+.notif-panel { position: absolute; top: calc(100% + 10px); right: 0; width: 340px; max-height: 440px; background: var(--modal-bg); border: 1px solid var(--bg-card-border); border-radius: 18px; box-shadow: 0 8px 40px rgba(14,165,233,0.18); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: none; flex-direction: column; overflow: hidden; z-index: 500; animation: fadeUp 0.2s ease; }
+.notif-panel.open { display: flex; }
+.notif-panel-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--bg-card-border); flex-shrink: 0; }
+.notif-panel-title { font-family: var(--font-display); font-size: 0.92rem; font-weight: 700; color: var(--text-primary); }
+.notif-mark-all { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: background 0.15s; }
+.notif-mark-all:hover { background: var(--bg-navitem-hover); }
+.notif-panel-body { overflow-y: auto; flex: 1; }
+.notif-entry { display: flex; align-items: flex-start; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--bg-card-border); transition: background 0.15s; cursor: pointer; }
+.notif-entry:last-child { border-bottom: none; }
+.notif-entry:hover { background: var(--bg-navitem-hover); }
+.notif-entry.unread { background: var(--bg-collab-box); }
+.notif-entry.unread:hover { background: var(--bg-navitem-hover); }
+.notif-avatar-wrap { position: relative; flex-shrink: 0; }
+.notif-av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--ring-avatar); }
+.notif-type-dot { position: absolute; bottom: -2px; right: -2px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--modal-bg); }
+.notif-msg { font-size: 0.8rem; color: var(--text-body); line-height: 1.45; }
+.notif-msg strong { color: var(--text-primary); font-weight: 700; }
+.notif-time { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+  .sidebar-left { width: 240px; }
+  .sidebar-right { width: 260px; }
+  .topbar { left: 240px; right: 260px; }
+  .main-content { margin-left: 240px; margin-right: 260px; }
+}
+@media (max-width: 900px) {
+  .sidebar-left { width: 64px; padding: 16px 8px; }
+  .logo-title, .logo-sub, .profile-name, .profile-sub, .nav-item span, .nav-collapse-btn span { display: none; }
+  .logo-icon { margin: 0 auto; }
+  .sidebar-logo { justify-content: center; gap: 0; }
+  .nav-item { justify-content: center; padding: 12px; }
+  .profile-link { justify-content: center; }
+  .profile-avatar { margin: 0; }
+  .collapse-body { display: none !important; }
+  .sidebar-right { display: none; }
+  .topbar { left: 64px; right: 16px; }
+  .main-content { margin-left: 64px; margin-right: 16px; }
+  .top-controls { right: 16px; }
+}
+@media (max-width: 600px) {
+  .sidebar-left { display: none; }
+  .topbar { left: 0; right: 0; }
+  .main-content { margin-left: 0; margin-right: 0; }
+  .fab-group { right: 16px; bottom: 16px; }
+  .fab-btn { padding: 10px 14px; font-size: 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== AUTH SCREEN — shown first, hides app content ===== -->
+<div id="authScreen" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:var(--bg-page);">
+  <div style="background:var(--bg-card);border:1px solid var(--bg-card-border);border-radius:24px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(14,165,233,0.14);backdrop-filter:blur(20px);">
+
+    <!-- Brand -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:30px;">
+      <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--sky-500),var(--cyan-500));display:flex;align-items:center;justify-content:center;font-size:1.4rem;">⚡</div>
+      <div>
+        <div style="font-family:var(--font-display);font-size:1.25rem;font-weight:800;color:var(--text-primary);">SyncUp</div>
+        <div style="font-size:0.72rem;color:var(--text-secondary);font-weight:500;">Connect &amp; Create</div>
+      </div>
+    </div>
+
+    <!-- Login Form -->
+    <div id="loginForm">
+      <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;color:var(--text-primary);margin-bottom:20px;">Welcome back 👋</div>
+      <div style="margin-bottom:13px;">
+        <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:5px;">Email</label>
+        <input type="email" id="loginEmail" placeholder="you@pccoe.edu" style="width:100%;padding:11px 14px;background:var(--bg-input);border:1.5px solid var(--bg-card-border);border-radius:12px;font-size:0.87rem;font-family:var(--font-body);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+      </div>
+      <div style="margin-bottom:13px;">
+        <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:5px;">Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" style="width:100%;padding:11px 14px;background:var(--bg-input);border:1.5px solid var(--bg-card-border);border-radius:12px;font-size:0.87rem;font-family:var(--font-body);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+      </div>
+      <div id="loginError" style="display:none;background:rgba(239,68,68,0.1);color:#dc2626;border-radius:10px;padding:9px 12px;font-size:0.8rem;margin-bottom:12px;"></div>
+      <button onclick="doLogin()" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--sky-500),var(--cyan-500));color:#fff;border:none;border-radius:13px;font-size:0.9rem;font-weight:700;font-family:var(--font-display);cursor:pointer;">Sign In</button>
+      <p style="text-align:center;margin-top:14px;font-size:0.8rem;color:var(--text-secondary);">No account? <a onclick="showRegisterForm()" style="color:var(--sky-600);cursor:pointer;font-weight:600;">Register</a></p>
+      <p style="text-align:center;font-size:0.72rem;color:var(--text-muted);margin-top:6px;">Demo: alex@pccoe.edu / password123</p>
+    </div>
+
+    <!-- Register Form -->
+    <div id="registerForm" style="display:none">
+      <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;color:var(--text-primary);margin-bottom:20px;">Create account 🚀</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px;">
+        <div>
+          <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:5px;">Full Name</label>
+          <input type="text" id="regName" placeholder="Alex Johnson" style="width:100%;padding:10px 12px;background:var(--bg-input);border:1.5px solid var(--bg-card-border);border-radius:12px;font-size:0.85rem;font-family:var(--font-body);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+        </div>
+        <div>
+          <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:5px;">Email</label>
+          <input type="email" id="regEmail" placeholder="you@pccoe.edu" style="width:100%;padding:10px 12px;background:var(--bg-input);border:1.5px solid var(--bg-card-border);border-radius:12px;font-size:0.85rem;font-family:var(--font-body);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px;">
+        <div>
+          <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:5px;">Department</label>
+          <input type="text" id="regDept" placeholder="Computer Engg." style="width:100%;padding:10px 12px;background:var(--bg-input);border:1.5px solid var(--bg-card-border);border-radius:12px;font-size:0.85rem;font-family:var(--font-body);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+        </div>
+        <div>
+          <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:5px;">Year</label>
+          <select id="regYear" style="width:100%;padding:10px 12px;background:var(--bg-input);border:1.5px solid var(--bg-card-border);border-radius:12px;font-size:0.85rem;font-family:var(--font-body);color:var(--text-primary);outline:none;box-sizing:border-box;">
+            <option value="">Year</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:13px;">
+        <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:5px;">Password</label>
+        <input type="password" id="regPassword" placeholder="min 6 characters" onkeydown="if(event.key==='Enter')doRegister()" style="width:100%;padding:11px 14px;background:var(--bg-input);border:1.5px solid var(--bg-card-border);border-radius:12px;font-size:0.87rem;font-family:var(--font-body);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+      </div>
+      <div id="regError" style="display:none;background:rgba(239,68,68,0.1);color:#dc2626;border-radius:10px;padding:9px 12px;font-size:0.8rem;margin-bottom:12px;"></div>
+      <button onclick="doRegister()" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--sky-500),var(--cyan-500));color:#fff;border:none;border-radius:13px;font-size:0.9rem;font-weight:700;font-family:var(--font-display);cursor:pointer;">Create Account</button>
+      <p style="text-align:center;margin-top:14px;font-size:0.8rem;color:var(--text-secondary);">Have an account? <a onclick="showLoginForm()" style="color:var(--sky-600);cursor:pointer;font-weight:600;">Sign in</a></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== APP CONTENT — hidden until logged in ===== -->
+<div id="appContent" style="display:none;">
+
+<!-- ===== LEFT SIDEBAR ===== -->
+<aside class="sidebar-left">
+  <div class="sidebar-logo" style="cursor:pointer" onclick="window.location.href='blog.html'">
+    <div class="logo-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    </div>
+    <div>
+      <div class="logo-title">SyncUp</div>
+      <div class="logo-sub">Connect &amp; Create</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="nav-item active">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Feed</span>
+    </button>
+
+    <a href="collab.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 012 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg>
+      <span>Collaborations</span>
+    </a>
+
+    <div class="nav-group" id="domainsGroup">
+      <button class="nav-collapse-btn" onclick="toggleDomainsNav()" id="domainsToggle">
+        <span class="nav-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/><rect x="2" y="15" width="6" height="6" rx="1"/><path d="M10 6h4M10 18h8M18 14v8"/></svg>
+          <span>Domains</span>
+        </span>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="collapse-body" id="domainsBody">
+        <button class="domain-nav-item" onclick="openDomainModal('tech')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Tech
+        </button>
+        <button class="domain-nav-item" onclick="openDomainModal('nontech')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2M8 21v-2M16 21v-2"/></svg>
+          Non-Tech
+        </button>
+        <button class="domain-nav-item" onclick="openDomainModal('additional')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Additional
+        </button>
+      </div>
+    </div>
+
+    <button class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Events</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-profile">
+    <a href="profile.html" class="profile-link">
+      <img src="https://images.unsplash.com/photo-1770028919882-017b31ad6d42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" alt="Alex Johnson" class="profile-avatar" />
+      <div>
+        <div class="profile-name">Alex Johnson</div>
+        <div class="profile-sub">@alexj · CS '25</div>
+      </div>
+    </a>
+  </div>
+</aside>
+
+<!-- ===== TOPBAR ===== -->
+<div class="topbar">
+  <div class="search-wrap" id="searchWrap">
+    <span class="search-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+    <input class="search-input" id="searchInput" placeholder="Search students, projects, skills…"
+      onfocus="document.getElementById('searchWrap').classList.add('expanded')"
+      onblur="document.getElementById('searchWrap').classList.remove('expanded')" />
+  </div>
+</div>
+
+<!-- ===== TOP RIGHT CONTROLS ===== -->
+<div class="top-controls">
+  <button class="icon-btn" onclick="toggleChat()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+  </button>
+  <button class="icon-btn" id="notifBtn" onclick="toggleNotifPanel(event)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+    <span class="notif-dot" id="notifDot"></span>
+  </button>
+  <div class="notif-panel" id="notifPanel">
+    <div class="notif-panel-header">
+      <span class="notif-panel-title">Notifications</span>
+      <button class="notif-mark-all" onclick="markAllRead()">Mark all read</button>
+    </div>
+    <div class="notif-panel-body">
+      <div class="notif-entry unread">
+        <div class="notif-avatar-wrap">
+          <img src="https://images.unsplash.com/photo-1706025090794-7ade2c1b6208?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=80" class="notif-av" />
+          <span class="notif-type-dot" style="background:var(--sky-500)"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>
+        </div>
+        <div class="notif-text">
+          <div class="notif-msg"><strong>Emma Thompson</strong> sent you a connection request.</div>
+          <div class="notif-time">2 minutes ago</div>
+        </div>
+      </div>
+      <div class="notif-entry unread">
+        <div class="notif-avatar-wrap">
+          <img src="https://images.unsplash.com/photo-1720659201153-e0c195776963?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=80" class="notif-av" />
+          <span class="notif-type-dot" style="background:var(--cyan-500)"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 012 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg></span>
+        </div>
+        <div class="notif-text">
+          <div class="notif-msg"><strong>Ryan Chen</strong> invited you to collaborate on <em>ML Study Tool</em>.</div>
+          <div class="notif-time">1 hour ago</div>
+        </div>
+      </div>
+      <div class="notif-entry">
+        <div class="notif-avatar-wrap">
+          <img src="https://images.unsplash.com/photo-1758270704524-596810e891b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=80" class="notif-av" />
+          <span class="notif-type-dot" style="background:#ef4444"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+        </div>
+        <div class="notif-text">
+          <div class="notif-msg"><strong>Sophie Martinez</strong> liked your post about React hooks.</div>
+          <div class="notif-time">3 hours ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="icon-btn theme-toggle" onclick="toggleTheme()">
+    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="moon-icon hidden" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+  </button>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="main-content">
+  <div class="feed">
+    <div class="feed-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'all')">All Posts</button>
+      <button class="tab-btn" onclick="switchTab(this,'collab')">Collaborations</button>
+      <button class="tab-btn" onclick="switchTab(this,'trending')">Trending</button>
+    </div>
+    <div class="posts-list" id="postsList"></div>
+  </div>
+</main>
+
+<!-- ===== RIGHT SIDEBAR ===== -->
+<aside class="sidebar-right">
+  <div class="widget">
+    <h2 class="widget-title">People You May Know</h2>
+    <div class="connections-list">
+      <div class="connection-item">
+        <img src="https://images.unsplash.com/photo-1706025090794-7ade2c1b6208?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" alt="" class="conn-avatar" />
+        <div class="conn-info"><div class="conn-name">Emma Thompson</div><div class="conn-role">Product Designer</div></div>
+        <button class="btn-connect">Connect</button>
+      </div>
+      <div class="connection-item">
+        <img src="https://images.unsplash.com/photo-1720659201153-e0c195776963?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" alt="" class="conn-avatar" />
+        <div class="conn-info"><div class="conn-name">Ryan Chen</div><div class="conn-role">ML Engineer</div></div>
+        <button class="btn-connect">Connect</button>
+      </div>
+      <div class="connection-item">
+        <img src="https://images.unsplash.com/photo-1758270704524-596810e891b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" alt="" class="conn-avatar" />
+        <div class="conn-info"><div class="conn-name">Sophie Martinez</div><div class="conn-role">Research Lead</div></div>
+        <button class="btn-connect">Connect</button>
+      </div>
+      <div class="connection-item">
+        <img src="https://images.unsplash.com/photo-1770028919882-017b31ad6d42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" alt="" class="conn-avatar" />
+        <div class="conn-info"><div class="conn-name">James Wilson</div><div class="conn-role">UI/UX Designer</div></div>
+        <button class="btn-connect">Connect</button>
+      </div>
+    </div>
+  </div>
+  <div class="widget">
+    <h2 class="widget-title">Trending</h2>
+    <div class="trending-list">
+      <div class="trending-item"><div class="trend-tag">#MachineLearning</div><div class="trend-count">1.2k posts this week</div></div>
+      <div class="trending-item"><div class="trend-tag">#HackathonSeason</div><div class="trend-count">890 posts this week</div></div>
+      <div class="trending-item"><div class="trend-tag">#WebDev</div><div class="trend-count">745 posts this week</div></div>
+      <div class="trending-item"><div class="trend-tag">#StartupIdeas</div><div class="trend-count">621 posts this week</div></div>
+      <div class="trending-item"><div class="trend-tag">#OpenSource</div><div class="trend-count">508 posts this week</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== FAB BUTTONS ===== -->
+<div class="fab-group">
+  <button class="fab-btn fab-post" onclick="openPostModal()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Post
+  </button>
+  <button class="fab-btn fab-collab" onclick="window.location.href='collab.html'">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 012 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg>
+    Collaborate
+  </button>
+</div>
+
+<!-- ===== CHAT PANEL ===== -->
+<div class="chat-panel" id="chatPanel">
+  <div class="panel-header">
+    <h3>Messages</h3>
+    <button onclick="toggleChat()">✕</button>
+  </div>
+  <div class="panel-body">
+    <div class="chat-item">
+      <img src="https://images.unsplash.com/photo-1706025090794-7ade2c1b6208?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=80" alt="" />
+      <div><div class="chat-name">Emma Thompson</div><div class="chat-preview">Hey! Would love to collab on...</div></div>
+      <span class="chat-time">2m</span>
+    </div>
+    <div class="chat-item">
+      <img src="https://images.unsplash.com/photo-1720659201153-e0c195776963?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=80" alt="" />
+      <div><div class="chat-name">Ryan Chen</div><div class="chat-preview">The ML model is working great!</div></div>
+      <span class="chat-time">1h</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CREATE POST MODAL ===== -->
+<div class="modal-overlay hidden" id="postModal">
+  <div class="modal-box wide">
+    <div class="modal-header">
+      <h3>Create Post</h3>
+      <button onclick="closePostModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="create-post-row">
+        <img src="https://images.unsplash.com/photo-1770028919882-017b31ad6d42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=80" alt="" class="post-avatar" />
+        <div class="post-input-wrap">
+          <textarea class="post-textarea" placeholder="Share your thoughts, projects, or ideas…" id="postContent"></textarea>
+          <div class="word-counter" id="postWordCounter">0/5000</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions" style="margin-top:16px;">
+      <button class="btn-primary" onclick="submitPost()">Share</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DOMAIN OVERLAY ===== -->
+<div class="domain-overlay" id="domainOverlay">
+  <div class="domain-modal" id="dmodal-tech">
+    <div class="domain-modal-header">
+      <div class="domain-modal-left">
+        <button class="domain-back-btn" onclick="closeDomainModal('tech')">←</button>
+        <div><div class="domain-modal-title">Tech Domains</div><div class="domain-modal-sub">Select a domain to explore subdomains</div></div>
+      </div>
+    </div>
+    <div class="domain-modal-body">
+      <p class="domain-hint">Click on any tech domain to explore its subdomains</p>
+      <div class="domain-grid">
+        <div class="domain-card" onclick="openSubDomainModal('Software &amp; Computing','tech',['Web Development','Mobile App Development','Backend Development','Full Stack Development','Game Development','Software Engineering'])">Software &amp; Computing</div>
+        <div class="domain-card" onclick="openSubDomainModal('AI &amp; Data','tech',['Machine Learning','Deep Learning','Data Science','Natural Language Processing','Computer Vision','Data Engineering'])">AI &amp; Data</div>
+        <div class="domain-card" onclick="openSubDomainModal('Cyber &amp; Systems','tech',['Cybersecurity','Network Engineering','Cloud Computing','DevOps','Embedded Systems','OS &amp; Systems'])">Cyber &amp; Systems</div>
+        <div class="domain-card" onclick="openSubDomainModal('Hardware &amp; Engineering','tech',['VLSI Design','Robotics','IoT','Electronics','Mechanical Engineering','Electrical Engineering'])">Hardware &amp; Engineering</div>
+        <div class="domain-card" onclick="openSubDomainModal('Engineering Specializations','tech',['Biomedical Engineering','Chemical Engineering','Civil Engineering','Aerospace Engineering','Environmental Engineering','Materials Science'])">Engineering Specializations</div>
+        <div class="domain-card" onclick="openSubDomainModal('Creative Tech','tech',['UI/UX Design','AR/VR Development','Digital Art','3D Modeling','Animation','Creative Coding'])">Creative Tech</div>
+      </div>
+    </div>
+  </div>
+  <div class="domain-modal" id="dmodal-nontech">
+    <div class="domain-modal-header">
+      <div class="domain-modal-left">
+        <button class="domain-back-btn" onclick="closeDomainModal('nontech')">←</button>
+        <div><div class="domain-modal-title">Non-Tech Domains</div><div class="domain-modal-sub">Select a domain to explore subdomains</div></div>
+      </div>
+    </div>
+    <div class="domain-modal-body">
+      <p class="domain-hint">Click on any non-tech domain to explore its subdomains</p>
+      <div class="domain-grid">
+        <div class="domain-card" onclick="openSubDomainModal('Business &amp; Management','nontech',['Entrepreneurship','Product Management','Operations','Human Resources','Consulting','Strategy'])">Business &amp; Management</div>
+        <div class="domain-card" onclick="openSubDomainModal('Marketing &amp; Media','nontech',['Digital Marketing','Content Creation','Social Media','Brand Management','Public Relations','Journalism'])">Marketing &amp; Media</div>
+        <div class="domain-card" onclick="openSubDomainModal('Finance &amp; Economics','nontech',['Investment Banking','Personal Finance','Accounting','Economics','FinTech','Equity Research'])">Finance &amp; Economics</div>
+        <div class="domain-card" onclick="openSubDomainModal('Creative &amp; Communication','nontech',['Graphic Design','Photography','Video Editing','Public Speaking','Writing','Performing Arts'])">Creative &amp; Communication</div>
+        <div class="domain-card" onclick="openSubDomainModal('Design &amp; Art','nontech',['Interior Design','Fashion Design','Industrial Design','Fine Arts','Typography','Illustration'])">Design &amp; Art</div>
+        <div class="domain-card" onclick="openSubDomainModal('Research &amp; Academics','nontech',['Scientific Research','Academic Writing','Literature Review','Lab Research','Thesis Work','Teaching &amp; Tutoring'])">Research &amp; Academics</div>
+        <div class="domain-card" onclick="openSubDomainModal('Community &amp; Leadership','nontech',['NGO &amp; Social Work','Event Management','Student Council','Volunteering','Club Leadership','Policy Advocacy'])">Community &amp; Leadership</div>
+      </div>
+    </div>
+  </div>
+  <div class="domain-modal" id="dmodal-additional">
+    <div class="domain-modal-header">
+      <div class="domain-modal-left">
+        <button class="domain-back-btn" onclick="closeDomainModal('additional')">←</button>
+        <div><div class="domain-modal-title">Additional Domains</div><div class="domain-modal-sub">Special Interest Areas</div></div>
+      </div>
+      <button class="domain-apply-btn" id="apply-additional" onclick="applyAdditionalFilters()">✓ Apply Filters</button>
+    </div>
+    <div class="domain-modal-body">
+      <p class="domain-hint">Select the domains you're interested in (multiple selections allowed)</p>
+      <div class="selected-tags-box" id="selected-box-additional">
+        <div class="selected-tags-label" id="selected-label-additional">Selected (0):</div>
+        <div class="selected-tags-list" id="tags-additional"></div>
+      </div>
+      <div class="domain-grid" id="grid-additional">
+        <div class="domain-card" onclick="toggleAdditional(this,'Open Source Development')">Open Source Development</div>
+        <div class="domain-card" onclick="toggleAdditional(this,'Competitive Programming')">Competitive Programming</div>
+        <div class="domain-card" onclick="toggleAdditional(this,'Hackathons')">Hackathons</div>
+        <div class="domain-card" onclick="toggleAdditional(this,'Sustainability / Climate Tech')">Sustainability / Climate Tech</div>
+        <div class="domain-card" onclick="toggleAdditional(this,'Social Impact')">Social Impact</div>
+        <div class="domain-card" onclick="toggleAdditional(this,'EdTech')">EdTech</div>
+        <div class="domain-card" onclick="toggleAdditional(this,'HealthTech')">HealthTech</div>
+        <div class="domain-card" onclick="toggleAdditional(this,'Legal / Policy')">Legal / Policy</div>
+      </div>
+    </div>
+  </div>
+  <div class="domain-modal" id="dmodal-sub">
+    <div class="domain-modal-header">
+      <div class="domain-modal-left">
+        <button class="domain-back-btn" id="sub-back-btn">←</button>
+        <div><div class="domain-modal-title" id="sub-title">Subdomains</div><div class="domain-modal-sub" id="sub-subtitle">Tech Domain</div></div>
+      </div>
+      <button class="domain-apply-btn visible" onclick="applySubFilters()">✓ Apply Filters</button>
+    </div>
+    <div class="domain-modal-body">
+      <p class="domain-hint">Select the subdomains you're interested in (multiple selections allowed)</p>
+      <div class="selected-tags-box" id="selected-box-sub">
+        <div class="selected-tags-label" id="selected-label-sub">Selected (0):</div>
+        <div class="selected-tags-list" id="tags-sub"></div>
+      </div>
+      <div class="domain-grid" id="grid-sub"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Domain Toast -->
+<div class="domain-toast" id="domainToast"></div>
+
+</div><!-- end #appContent -->
+
+<script>
+/* ===== AUTH ===== */
+function getToken() { return localStorage.getItem('cl_token'); }
+
+function showLoginForm() {
+  document.getElementById('registerForm').style.display = 'none';
+  document.getElementById('loginForm').style.display = 'block';
+}
+function showRegisterForm() {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('registerForm').style.display = 'block';
+}
+
+function showApp() {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appContent').style.display = 'block';
+  // Load feed now that we're logged in
+  loadFeed();
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  errEl.style.display = 'none';
+  if (!email || !password) { errEl.textContent = 'Please fill all fields.'; errEl.style.display = 'block'; return; }
+  try {
+    const res = await fetch('http://localhost:3000/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email, password }) });
+    const text = await res.text();
+    if (!text) throw new Error('Server returned empty response. Check your backend is running.');
+    const data = JSON.parse(text);
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+    localStorage.setItem('cl_token', data.token);
+    window.currentUser = data.user;
+    showApp();
+  } catch(e) { errEl.textContent = e.message; errEl.style.display = 'block'; }
+}
+
+async function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const dept = document.getElementById('regDept').value.trim();
+  const year = document.getElementById('regYear').value;
+  const errEl = document.getElementById('regError');
+  errEl.style.display = 'none';
+  if (!name || !email || !password) { errEl.textContent = 'Name, email and password required.'; errEl.style.display = 'block'; return; }
+  if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; errEl.style.display = 'block'; return; }
+  try {
+    const res = await fetch('http://localhost:3000/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name, email, password, college:'PCCOE', department: dept, year: year ? Number(year) : null }) });
+    const text = await res.text();
+    if (!text) throw new Error('Server returned empty response. Check your backend is running.');
+    const data = JSON.parse(text);
+    if (!res.ok) throw new Error(data.error || 'Registration failed');
+    localStorage.setItem('cl_token', data.token);
+    window.currentUser = data.user;
+    showApp();
+  } catch(e) { errEl.textContent = e.message; errEl.style.display = 'block'; }
+}
+
+// On page load: show login OR jump straight to app if already logged in
+(function() {
+  const token = getToken();
+  if (token) {
+    fetch('/api/auth/me', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(res => {
+      if (res.ok) return res.json();
+      throw new Error('invalid');
+    })
+    .then(user => {
+      window.currentUser = user;
+      showApp();
+    })
+    .catch(() => {
+      localStorage.removeItem('cl_token');
+    });
+  }
+})();
+
+/* ===== HELPERS ===== */
+function formatRelativeTime(dateValue) {
+  const timestamp = new Date(dateValue).getTime();
+  if (Number.isNaN(timestamp)) return 'just now';
+  const diffMs = Date.now() - timestamp;
+  if (diffMs < 60000) return 'just now';
+  const minutes = Math.floor(diffMs / 60000);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  const weeks = Math.floor(days / 7);
+  if (weeks < 5) return `${weeks}w ago`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months}mo ago`;
+  return `${Math.floor(days / 365)}y ago`;
+}
+
+function mapApiPostToUi(post) {
+  const normalizedTags = Array.isArray(post.tags)
+    ? post.tags.map(tag => (String(tag).startsWith('#') ? String(tag) : `#${String(tag)}`))
+    : [];
+  return {
+    id: post.id,
+    type: post.post_type === 'collab' ? 'collab' : 'post',
+    author: post.author_name || 'Unknown User',
+    avatar: post.author_avatar || 'https://images.unsplash.com/photo-1770028919882-017b31ad6d42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100',
+    role: post.author_dept || 'SyncUp Member',
+    time: formatRelativeTime(post.created_at),
+    content: post.content || '',
+    tags: normalizedTags,
+    likes: Number(post.likes) || 0,
+    comments: Number(post.comments) || 0,
+    shares: Number(post.shares) || 0,
+    created_at: post.created_at || null
+  };
+}
+
+function mapApiCollabToUi(collab) {
+  const roles = Array.isArray(collab.roles_needed) ? collab.roles_needed : [];
+  const skills = Array.isArray(collab.skills) ? collab.skills : [];
+  const tags = [];
+  if (collab.category) tags.push(`#${String(collab.category).replace(/\s+/g, '')}`);
+  skills.slice(0, 4).forEach(skill => tags.push(`#${String(skill).replace(/\s+/g, '')}`));
+  return {
+    id: collab.id,
+    type: 'collab',
+    author: collab.owner_name || 'Unknown User',
+    avatar: collab.owner_avatar || 'https://images.unsplash.com/photo-1770028919882-017b31ad6d42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100',
+    role: collab.owner_dept || 'SyncUp Member',
+    time: formatRelativeTime(collab.created_at),
+    content: collab.description || collab.title || 'Collaboration opportunity',
+    collab: { looking: collab.urgency === 'urgent' ? 'Urgent collaboration request' : 'Looking for teammates', positions: roles.length ? roles.join(', ') : 'Roles not specified', skills },
+    tags,
+    likes: 0, comments: 0, shares: 0,
+    created_at: collab.created_at || null
+  };
+}
+
+/* ===== STATE ===== */
+let posts = [];
+let activeHashtagFilters = new Set();
+let currentTab = 'all';
+const POST_WORD_LIMIT = 5000;
+
+/* ===== FEED LOAD — only called after login ===== */
+async function loadFeed() {
+  try {
+    const [postsRes, collabsRes] = await Promise.all([fetch('/api/posts'), fetch('/api/collabs')]);
+    const postsData = await postsRes.json().catch(() => ({}));
+    const collabsData = await collabsRes.json().catch(() => ({}));
+    const apiPosts = Array.isArray(postsData) ? postsData : [];
+    const apiCollabs = Array.isArray(collabsData) ? collabsData : [];
+    posts = [...apiPosts.map(mapApiPostToUi), ...apiCollabs.map(mapApiCollabToUi)]
+      .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+  } catch(err) {
+    posts = [];
+  }
+  ensureClearFiltersButton();
+  applyFiltersToFeed();
+  updatePostWordCounter();
+  const postTextarea = document.getElementById('postContent');
+  if (postTextarea) postTextarea.addEventListener('input', updatePostWordCounter);
+}
+
+/* ===== WORD COUNTER ===== */
+function countWords(text) { const w = text.trim().match(/\S+/g); return w ? w.length : 0; }
+function updatePostWordCounter() {
+  const ta = document.getElementById('postContent');
+  const c = document.getElementById('postWordCounter');
+  if (!ta || !c) return;
+  let v = ta.value, wc = countWords(v);
+  if (wc > POST_WORD_LIMIT) { v = v.trim().match(/\S+/g).slice(0, POST_WORD_LIMIT).join(' '); ta.value = v; wc = POST_WORD_LIMIT; }
+  c.textContent = `${wc}/${POST_WORD_LIMIT}`;
+}
+
+let likedPosts = new Set();
+
+function normalizeHashtagTag(tag) {
+  if (typeof tag !== 'string') return '';
+  const t = tag.trim().toLowerCase();
+  return t ? (t.startsWith('#') ? t : `#${t}`) : '';
+}
+
+function ensureClearFiltersButton() {
+  const postsList = document.getElementById('postsList');
+  if (!postsList) return;
+  let bar = document.getElementById('feedFiltersBar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'feedFiltersBar';
+    bar.style.cssText = 'display:flex;justify-content:flex-end;margin-bottom:12px;';
+    postsList.parentNode.insertBefore(bar, postsList);
+  }
+  if (!document.getElementById('clearFeedFiltersBtn')) {
+    const btn = document.createElement('button');
+    btn.id = 'clearFeedFiltersBtn';
+    btn.className = 'tab-btn hidden';
+    btn.textContent = 'Clear filters ✕';
+    btn.onclick = () => { activeHashtagFilters.clear(); applyFiltersToFeed(); };
+    bar.appendChild(btn);
+  }
+}
+
+function updateClearFiltersButtonVisibility() {
+  const btn = document.getElementById('clearFeedFiltersBtn');
+  if (btn) btn.classList.toggle('hidden', activeHashtagFilters.size === 0);
+}
+
+function filterByTag(tag) {
+  const n = normalizeHashtagTag(tag);
+  if (!n) return;
+  activeHashtagFilters.has(n) ? activeHashtagFilters.delete(n) : activeHashtagFilters.add(n);
+  applyFiltersToFeed();
+}
+
+function applyFiltersToFeed() {
+  ensureClearFiltersButton();
+  const subset = activeHashtagFilters.size === 0 ? posts
+    : posts.filter(p => (Array.isArray(p.tags) ? p.tags : []).map(normalizeHashtagTag).some(t => activeHashtagFilters.has(t)));
+  updateClearFiltersButtonVisibility();
+  renderPosts(currentTab, subset);
+}
+
+function renderPosts(filter = 'all', preFilteredPosts = null) {
+  const list = document.getElementById('postsList');
+  if (!list) return;
+  const src = Array.isArray(preFilteredPosts) ? preFilteredPosts : posts;
+  const filtered = filter === 'collab' ? src.filter(p => p.type === 'collab') : src;
+  list.innerHTML = filtered.map((p, i) => `
+    <div class="post-card" style="animation-delay:${i * 0.07}s">
+      <div class="post-header">
+        <a href="profile.html"><img src="${p.avatar}" alt="${p.author}" class="post-avatar-sm" /></a>
+        <div class="post-meta">
+          <div class="post-meta-top">
+            <a href="profile.html" class="post-author">${p.author}</a>
+            ${p.type === 'collab' ? '<span class="badge-collab">Collab</span>' : ''}
+          </div>
+          <div class="post-role">${p.role}</div>
+          <div class="post-info">${p.time}</div>
+        </div>
+      </div>
+      <div class="post-body">
+        <p class="post-content">${p.content}</p>
+        ${p.collab ? `<div class="collab-box"><p class="collab-looking">${p.collab.looking}</p><p class="collab-positions">${p.collab.positions}</p><div class="skill-tags">${p.collab.skills.map(s => `<span class="tag-skill">${s}</span>`).join('')}</div></div>` : ''}
+        <div class="post-tags">${(Array.isArray(p.tags) ? p.tags : []).map(t => `<span class="tag-hash" onclick="filterByTag(${JSON.stringify(t)})">${t}</span>`).join('')}</div>
+      </div>
+      <div class="post-actions">
+        <button class="action-btn ${likedPosts.has(p.id) ? 'liked' : ''}" onclick="toggleLike(${p.id}, this)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="${likedPosts.has(p.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          <span class="like-count">${likedPosts.has(p.id) ? p.likes + 1 : p.likes}</span>
+        </button>
+        <button class="action-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          ${p.comments}
+        </button>
+        <button class="action-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          ${p.shares}
+        </button>
+        ${p.type === 'collab' ? `<button class="btn-join-team" onclick="window.location.href='collab.html'">Join Team</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+async function toggleLike(id, btn) {
+  const token = getToken();
+  if (!token) { showDomainToast('Please log in to like posts'); return; }
+  try {
+    const res = await fetch(`/api/posts/${id}/like`, { method:'POST', headers:{ 'Authorization': `Bearer ${token}` } });
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(result.error || 'Failed to update like');
+    result.liked ? likedPosts.add(id) : likedPosts.delete(id);
+    applyFiltersToFeed();
+  } catch(err) { showDomainToast(err.message || 'Failed to update like'); }
+}
+
+function switchTab(el, tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentTab = tab;
+  applyFiltersToFeed();
+}
+
+/* ===== POST MODAL ===== */
+function openPostModal() { document.getElementById('postModal').classList.remove('hidden'); }
+function closePostModal() { document.getElementById('postModal').classList.add('hidden'); }
+
+async function submitPost() {
+  const textarea = document.getElementById('postContent');
+  const content = textarea.value.trim();
+  if (!content) { showDomainToast('Please write something before sharing.'); return; }
+  if (countWords(content) > POST_WORD_LIMIT) { showDomainToast('Word limit exceeded. Maximum 5000 words.'); return; }
+  const token = getToken();
+  if (!token) { showDomainToast('Please log in to create a post.'); return; }
+  try {
+    const tags = [...new Set((content.match(/(^|\s)#[A-Za-z0-9_]+/g) || []).map(m => m.trim()))];
+    const res = await fetch('/api/posts', { method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, body: JSON.stringify({ content, post_type:'general', tags }) });
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(result.error || 'Failed to create post.');
+    posts.unshift(mapApiPostToUi(result.post || result));
+    applyFiltersToFeed();
+    closePostModal();
+    textarea.value = '';
+    updatePostWordCounter();
+    showDomainToast('✓ Post shared successfully!');
+  } catch(err) { showDomainToast(err.message || 'Failed to create post.'); }
+}
+
+/* ===== CHAT ===== */
+function toggleChat() { document.getElementById('chatPanel').classList.toggle('open'); }
+
+/* ===== THEME ===== */
+(function() {
+  const saved = localStorage.getItem('syncup-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  if (saved === 'dark') {
+    document.addEventListener('DOMContentLoaded', function() {
+      const sun = document.querySelector('.sun-icon');
+      const moon = document.querySelector('.moon-icon');
+      if (sun) sun.classList.add('hidden');
+      if (moon) moon.classList.remove('hidden');
+    });
+  }
+})();
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const next = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('syncup-theme', next);
+  document.querySelector('.sun-icon').classList.toggle('hidden', !isDark);
+  document.querySelector('.moon-icon').classList.toggle('hidden', isDark);
+}
+
+/* ===== NOTIFICATIONS ===== */
+function toggleNotifPanel(e) {
+  e.stopPropagation();
+  const panel = document.getElementById('notifPanel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) document.getElementById('notifDot').style.display = 'none';
+}
+function markAllRead() {
+  document.querySelectorAll('.notif-entry.unread').forEach(el => el.classList.remove('unread'));
+  document.getElementById('notifDot').style.display = 'none';
+}
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('notifPanel');
+  const btn = document.getElementById('notifBtn');
+  if (panel && btn && !panel.contains(e.target) && !btn.contains(e.target)) panel.classList.remove('open');
+});
+
+/* ===== DOMAINS NAV ===== */
+function toggleDomainsNav() {
+  document.getElementById('domainsBody').classList.toggle('open');
+  document.querySelector('#domainsToggle .chevron').classList.toggle('open');
+}
+
+/* ===== DOMAIN OVERLAY ===== */
+const selectedSubdomains = new Set();
+const selectedAdditional = new Set();
+let currentParentType = 'tech';
+
+function openDomainModal(type) {
+  document.getElementById('domainOverlay').classList.add('active');
+  ['tech','nontech','additional','sub'].forEach(t => document.getElementById('dmodal-' + t).classList.remove('active'));
+  document.getElementById('dmodal-' + type).classList.add('active');
+}
+function closeDomainModal(type) {
+  document.getElementById('dmodal-' + type).classList.remove('active');
+  document.getElementById('domainOverlay').classList.remove('active');
+  selectedSubdomains.clear();
+}
+function openSubDomainModal(domainName, parentType, subdomains) {
+  currentParentType = parentType;
+  document.getElementById('sub-title').textContent = domainName.replace(/&amp;/g, '&');
+  document.getElementById('sub-subtitle').textContent = parentType === 'tech' ? 'Tech Domain' : 'Non-Tech Domain';
+  document.getElementById('sub-back-btn').onclick = () => {
+    document.getElementById('dmodal-sub').classList.remove('active');
+    document.getElementById('dmodal-' + parentType).classList.add('active');
+    selectedSubdomains.clear(); refreshSubUI();
+  };
+  const grid = document.getElementById('grid-sub');
+  grid.innerHTML = '';
+  subdomains.forEach(sub => {
+    const card = document.createElement('div');
+    card.className = 'domain-card' + (selectedSubdomains.has(sub) ? ' selected' : '');
+    card.textContent = sub;
+    card.onclick = () => toggleSubdomain(card, sub);
+    grid.appendChild(card);
+  });
+  refreshSubUI();
+  document.getElementById('dmodal-' + parentType).classList.remove('active');
+  document.getElementById('dmodal-sub').classList.add('active');
+}
+function toggleSubdomain(card, name) {
+  selectedSubdomains.has(name) ? (selectedSubdomains.delete(name), card.classList.remove('selected')) : (selectedSubdomains.add(name), card.classList.add('selected'));
+  refreshSubUI();
+}
+function refreshSubUI() {
+  const box = document.getElementById('selected-box-sub');
+  const label = document.getElementById('selected-label-sub');
+  const tags = document.getElementById('tags-sub');
+  if (selectedSubdomains.size > 0) {
+    box.classList.add('visible'); label.textContent = `Selected (${selectedSubdomains.size}):`;
+    tags.innerHTML = '';
+    selectedSubdomains.forEach(name => { const tag = document.createElement('div'); tag.className = 'domain-tag'; tag.innerHTML = `${name} <span class="remove" onclick="removeSubdomain('${name}')">×</span>`; tags.appendChild(tag); });
+  } else { box.classList.remove('visible'); }
+}
+function removeSubdomain(name) {
+  selectedSubdomains.delete(name);
+  document.querySelectorAll('#grid-sub .domain-card').forEach(c => { if (c.textContent.trim() === name) c.classList.remove('selected'); });
+  refreshSubUI();
+}
+function applySubFilters() {
+  if (selectedSubdomains.size === 0) { showDomainToast('Please select at least one subdomain.'); return; }
+  selectedSubdomains.forEach(name => { const n = normalizeHashtagTag(name); if (n) activeHashtagFilters.add(n); });
+  applyFiltersToFeed();
+  document.getElementById('dmodal-sub').classList.remove('active');
+  document.getElementById('domainOverlay').classList.remove('active');
+  selectedSubdomains.clear(); refreshSubUI();
+}
+function toggleAdditional(card, name) {
+  selectedAdditional.has(name) ? (selectedAdditional.delete(name), card.classList.remove('selected')) : (selectedAdditional.add(name), card.classList.add('selected'));
+  refreshAdditionalUI();
+}
+function refreshAdditionalUI() {
+  const box = document.getElementById('selected-box-additional');
+  const label = document.getElementById('selected-label-additional');
+  const tags = document.getElementById('tags-additional');
+  const applyBtn = document.getElementById('apply-additional');
+  if (selectedAdditional.size > 0) {
+    box.classList.add('visible'); applyBtn.classList.add('visible');
+    label.textContent = `Selected (${selectedAdditional.size}):`;
+    tags.innerHTML = '';
+    selectedAdditional.forEach(name => { const tag = document.createElement('div'); tag.className = 'domain-tag'; tag.innerHTML = `${name} <span class="remove" onclick="removeAdditional('${name}')">×</span>`; tags.appendChild(tag); });
+  } else { box.classList.remove('visible'); applyBtn.classList.remove('visible'); }
+}
+function removeAdditional(name) {
+  selectedAdditional.delete(name);
+  document.querySelectorAll('#grid-additional .domain-card').forEach(c => { if (c.textContent.trim() === name) c.classList.remove('selected'); });
+  refreshAdditionalUI();
+}
+function applyAdditionalFilters() {
+  if (selectedAdditional.size === 0) { showDomainToast('Please select at least one domain.'); return; }
+  selectedAdditional.forEach(name => { const n = normalizeHashtagTag(name); if (n) activeHashtagFilters.add(n); });
+  applyFiltersToFeed();
+  document.getElementById('dmodal-additional').classList.remove('active');
+  document.getElementById('domainOverlay').classList.remove('active');
+  selectedAdditional.clear(); refreshAdditionalUI();
+}
+function showDomainToast(msg) {
+  const t = document.getElementById('domainToast');
+  if (!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+document.getElementById('domainOverlay').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.classList.remove('active');
+    ['tech','nontech','additional','sub'].forEach(t => document.getElementById('dmodal-' + t).classList.remove('active'));
+  }
+});
+document.getElementById('postModal').addEventListener('click', function(e) { if (e.target === this) closePostModal(); });
+</script>
+</body>
+</html>
+
